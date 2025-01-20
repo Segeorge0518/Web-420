@@ -1,0 +1,19 @@
+{
+  "_id": "Customer 1",
+  "firstName": "Mel",
+  "lastName": "Brigg",
+  "Burgers": [
+    {
+      "_id": "Item 2",
+      "burgerName": "Mushroom Swiss Burger",
+      "price": "$7.95",
+      "orderNum": 1
+    },
+    {
+      "_id": "Item 7",
+      "burgerName": "Breakfast Burger",
+      "price": "$9.98",
+      "orderNum": 1
+    }
+  ]
+}
