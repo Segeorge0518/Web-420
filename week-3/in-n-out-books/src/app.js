@@ -55,13 +55,38 @@ app.get('/', (req, res) => {
         padding: 2em 0 1em 0;
         flex-grow: 1;
       }
+
       main p {
         color: #241e2b;
         padding: 5px;
       }
-      main h2 {
+
+      h2 {
         color: #1f1a25;
+        padding: 1em 0 1em 0;
+      }
+
+      h3 {
+        color: #3a3243;
         padding: .5em 0 1em 0;
+      }
+
+
+      #pageHeadText h2, h3{
+        padding: 5px;
+      }
+
+      #topBooks {
+        display: inline-block;
+        text-align: right;
+      }
+
+      #topBooks li {
+        text-align: left;
+      }
+
+      #specialEvents {
+        padding: 1.5em 0 .5em 0;
       }
 
       button {
@@ -75,7 +100,7 @@ app.get('/', (req, res) => {
         border: #593e75 solid 2px;
         border-radius: 10px;
         font-size: 15px;
-        margin: 40px 20px;
+        margin: .5em;
       }
 
       footer {
@@ -85,6 +110,7 @@ app.get('/', (req, res) => {
         width: 100vw;
         vertical-align: middle;
       }
+
       #footerText {
         text-align: center;
         color: #a089b9;
@@ -101,19 +127,39 @@ app.get('/', (req, res) => {
             <h1>Welcome to the In-N-Out Bookshop</h1>
         </header>
         <main>
+          <div id="pageHeadText">
             <h2>We are your one-stop shop for all your reading needs!</h2>
-            <p> We have everything from novels to audiobooks!</p>
-            <p>Check our schedule to see if we have any upcoming author events.</p>
+            <h3> We have everything from novels to audiobooks!</h3>
+          </div>
 
-            <button type="button" onclick="alert('Something went wrong! Please come back later')">Enter here!</button>
+          <h2>Here are last month's top books:</h2>
+          <div id="topBooks">
+            <ol>
+              <li>Fourth Wing by Rebecca Yarros</li>
+              <li>The Big Empty by Robert Crais</li>
+              <li>Iron Flame by Rebecca Yarros</li>
+              <li>The Housemaid by Freida McFadden</li>
+              <li>James by Percival Everett</li>
+            </ol>
+          </div>
 
+          <h2>Our Shop Hours</h2>
+          <ul>
+            <li>Mon-Fri: 9am - 7pm</li>
+            <li>Sat-Sun: 9am - 9pmS</li>
+          </ul>
+
+
+          <h3 id="specialEvents">Check our schedule to see if we have any upcoming author events.</h3>
+          <button type="button" onclick="alert('Something went wrong! Please come back later')">Enter here!</button>
         </main>
+
         <footer>
             <div id="footerText"><p>&copy; 2025 In-N-Out Books</p></div>
         </footer>
     </body>
     </html>
-`);
+  `);
 });
 
 
