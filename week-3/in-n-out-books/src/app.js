@@ -146,9 +146,14 @@ app.get('/', (req, res) => {
           <h2>Our Shop Hours</h2>
           <ul>
             <li>Mon-Fri: 9am - 7pm</li>
-            <li>Sat-Sun: 9am - 9pmS</li>
+            <li>Sat-Sun: 9am - 9pm</li>
           </ul>
 
+          <h2> Contact us:</h2>
+          <ul>
+            <li>Phone Number: 1-800-###-####</li>
+            <li>Email: InNOutBooks@gmail.com</li>
+          </ul>
 
           <h3 id="specialEvents">Check our schedule to see if we have any upcoming author events.</h3>
           <button type="button" onclick="alert('Something went wrong! Please come back later')">Enter here!</button>
