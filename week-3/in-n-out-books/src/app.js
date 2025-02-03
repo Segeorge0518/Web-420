@@ -10,6 +10,7 @@ const bcrypt = require("bcryptjs");
 const path = require('path');
 const createError = require("http-errors");
 const app = express(); // Creates an Express application
+const books = require('../database/books');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -165,6 +166,47 @@ app.get('/', (req, res) => {
     </body>
     </html>
   `);
+});
+
+app.get("/api/books", async(req, res, next) => {
+  try{
+    const allBooks = await books.find();
+    console.log("All books: ", allBooks);//Logs all recipes
+    res.send(allBooks);// Sends response with all books
+  } catch(err){
+    console.error("Error: ", err.message);//logs error message
+    next(err); //Passes error to the next middleware
+  }
+});
+
+app.get("/api/books/:id", async(req, res, next) => {
+  try{
+    const book = await books.findOne({id:Number(req.params.id)});
+    console.log("Books: ",book);//Logs all recipes
+    res.send(book);// Sends response with all books
+  } catch(err){
+    console.error("Error: ", err.message);//logs error message
+    next(err); //Passes error to the next middleware
+  }
+});
+
+app.get("/api/books/:id", async (req, res, next) =>{
+  try{
+    let{id}=req.params;
+    id=parseInt(id);
+
+    if (isNaN(id)){
+      return next(createError(400,"Input must be a number"));
+    }
+
+    const book=await books.findOne({id:id});
+
+    console.log("Book: ",book);
+    res.send(book);
+  } catch (err){
+    console.error("Error: ",err.message);
+    next(err);
+  }
 });
 
 
