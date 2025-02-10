@@ -179,36 +179,71 @@ app.get("/api/books", async(req, res, next) => {
   }
 });
 
-app.get("/api/books/:id", async(req, res, next) => {
-  try{
-    const book = await books.findOne({id:Number(req.params.id)});
-    console.log("Books: ",book);//Logs all recipes
-    res.send(book);// Sends response with all books
-  } catch(err){
-    console.error("Error: ", err.message);//logs error message
-    next(err); //Passes error to the next middleware
-  }
-});
-
-app.get("/api/books/:id", async (req, res, next) =>{
-  try{
-    let{id}=req.params;
-    id=parseInt(id);
-
-    if (isNaN(id)){
-      return next(createError(400,"Input must be a number"));
+app.get("/api/books/:id", async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    id = parseInt(id);
+    if (isNaN(id)) {
+      return res.status(400).send({ message: "Input must be a number" });
     }
-
-    const book=await books.findOne({id:id});
-
-    console.log("Book: ",book);
+    const book = await books.findOne({ id: id });
     res.send(book);
-  } catch (err){
-    console.error("Error: ",err.message);
+  } catch (err) {
+    console.error("Error: ", err.message);
     next(err);
   }
 });
 
+app.post("/api/recipes", async (req, res, next) => {
+  try {
+   const newRecipe = req.body;
+
+   const result = await recipes.insertOne(newRecipe);
+   console.log("Result: ", result);
+   res.status(201).send({ id: result.ops[0].id});
+   } catch (err) {
+     console.error("Error: ", err.message);
+     next(err);
+  }
+});
+
+app.post("/api/books", async (req, res, next) => {
+  try {
+   const newBook = req.body;
+
+   const expectedKeys = ["id","title","author"];
+   const receivedKeys = Object.keys(newBook);
+
+   if(!receivedKeys.every(key => expectedKeys.includes(key)) ||
+   receivedKeys.length !== expectedKeys.length){
+    console.error("Bad Request: Missing keys or extra keys",receivedKeys);
+    return next(createError(400, "Bad Request"));
+   }
+
+   const result = await books.insertOne(newBook);
+   console.log("Result: ", result);
+   res.status(201).send({ id: result.ops[0].id});
+  } catch (err) {
+    console.error("Error: ", err.message);
+    next(err);
+ }
+});
+
+app.delete("/api/books/:id", async (req,res,next)=> {
+  try {
+    const {id} = req.params;
+    const result = await books.deleteOne({id: parseInt(id) });
+    console.log("Result: ", result);
+    res.status(204).send();
+  } catch(err){
+    if (err.message === "No matching item found"){
+      return next(createError(404, "Recipe not found"));
+    }
+
+    console.error("Error: ",err.message);
+    next(err);
+  }
+});
 
 // 404 error handling middleware
 app.use(function(req, res, next) {
