@@ -35,7 +35,7 @@ describe("Chapter 4: API Tests",()=>{
     const res = await request(app).post("/api/books").send({
     id: 6,
     title: "The Book of Elsewhere",
-    author: ["Keanu Reeves", "China Miéville"]
+    author: "Keanu Reeves"
     });
     expect(res.statusCode).toEqual(201);
   });
@@ -51,5 +51,44 @@ describe("Chapter 4: API Tests",()=>{
     const res = await request(app).delete("/api/books/6");
 
     expect(res.statusCode).toEqual(204);
+  });
+});
+
+describe("Chapter5: API Tests",()=>{
+  it("should return a 204 status code when updating a book", async () => {
+    const res = await request(app).put("/api/books/1").send({
+      title: "The Sunbearer Trials",
+      author: "Aiden Thomas"
+    })
+
+    expect(res.statusCode).toEqual(204);
+  });
+
+  it("should return a 400 status code when updating a book with a non-numeric id", async () => {
+    const res = await request(app).put("/api/books/poo").send({
+      title: "Test Book",
+      author: "test Author"
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual("Input must be a number");
+  });
+
+  it("should return a 400 status code when updating a book with missing keys or extra keys", async ()=> {
+    const res = await request(app).put("/api/books/1").send({
+      title: "Test Book"
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual("Bad Request");
+
+    const res2 = await request(app).put("/api/books/1").send({
+      title: "Test Book",
+      author: "Test Author",
+      extraKey: "key"
+    });
+
+    expect(res2.statusCode).toEqual(400);
+    expect(res2.body.message).toEqual("Bad Request");
   });
 });
