@@ -92,3 +92,41 @@ describe("Chapter5: API Tests",()=>{
     expect(res2.body.message).toEqual("Bad Request");
   });
 });
+
+describe("Chapter6: API Tests",()=>{
+  it("should return a 200 status code with a message of 'Authentication successful' when registering a new user", async () => {
+    const res = await request(app).post("/api/users").send({
+    email: "cedric@hogwarts.edu",
+    password: "diggory"
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual("Authentication successful");
+    });
+
+  it("should return a 409 status code with a message of 'Conflict' when registering a user with a duplicate email", async () => {
+    const res = await request(app).post("/api/users").send({
+      email: "harry@hogwarts.edu",
+      password: "potter"
+    });
+    expect(res.statusCode).toEqual(409);
+    expect(res.body.message).toEqual("Conflict");
+  });
+
+  it("should return a 400 status code when registering a new user with too many or too few parameter values", async() => {
+    const res = await request(app).post("/api/users").send({
+      email: "cedric@hogwarts.edu",
+      password: "diggory",
+      extraKey: "extra"
+    });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual("Bad request");
+
+    const res2 = await request(app).post("/api/users").send({
+      email: "cedric@hogwarts.edu"
+    });
+
+    expect(res2.statusCode).toEqual(400);
+    expect(res2.body.message).toEqual("Bad request");
+  });
+});

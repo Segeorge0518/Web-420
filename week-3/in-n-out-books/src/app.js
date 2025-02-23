@@ -11,6 +11,9 @@ const path = require('path');
 const createError = require("http-errors");
 const app = express(); // Creates an Express application
 const books = require('../database/books');
+const users = require('../database/users');
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -274,6 +277,47 @@ app.put("/api/books/:id", async (req,res,next) => {
       return next(createError(404, "Book not found"));
     }
     console.error("Error: ", err.message);
+    next(err);
+  }
+});
+
+app.post("/api/users", async (req, res, next) => {
+  console.log("Request body: ", req.body);
+  try{
+    const user = req.body;
+
+    const expectedKeys = ["email", "password"];
+    const receivedKeys = Object.keys(user);
+
+    if(!receivedKeys.every(key => expectedKeys.includes(key)) ||
+    receivedKeys.length !== expectedKeys.length) {
+      console.error("Bad Request: Missing keys or extra keys", receivedKeys);
+      return next(createError(400,"Bad request"))
+    }
+
+    let duplicateUser;
+    try{
+      duplicateUser = await users.findOne({email: user.email});
+    } catch (err) {
+      duplicateUser = null;
+    }
+
+    if (duplicateUser) {
+      console.error("Conflict: User already exists");
+      return next(createError(409, "Conflict"));
+    }
+
+    const hashedPassword = bcrypt.hashSync(user.password, 10);
+
+    const newUser = await users.insertOne({
+      email:user.email,
+      password: hashedPassword
+    });
+
+    res.status(200).send({user:newUser, message: "Authentication successful"});
+  } catch (err) {
+    console.error("Error: ", err);
+    console.error("Error:", err.message);
     next(err);
   }
 });
