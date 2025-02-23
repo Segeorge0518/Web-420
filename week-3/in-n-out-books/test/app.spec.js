@@ -114,8 +114,8 @@ describe("Chapter6: API Tests",()=>{
 
   it("should return a 400 status code when registering a new user with too many or too few parameter values", async() => {
     const res = await request(app).post("/api/users").send({
-      email: "cedric@hogwarts.edu",
-      password: "diggory",
+      email: "test@testemail.edu",
+      password: "TestPassword",
       extraKey: "extra"
     });
 
