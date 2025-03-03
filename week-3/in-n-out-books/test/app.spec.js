@@ -130,3 +130,19 @@ describe("Chapter6: API Tests",()=>{
     expect(res2.body.message).toEqual("Bad request");
   });
 });
+
+describe("Chapter7: API Tests",()=>{
+  it("should return a 200 status code with a message of 'Password reset successful' when resetting a user's password", async() => {
+    const res = await request(app).post("/api/users/harry@hogwarts.edu/reset-password").send ({
+      securityQuestions: [
+        {answer: "Hedwig"},
+        {answer: "Quidditch Through the Ages"},
+        {answer: "Evans"}
+      ],
+      newPassword: "password"
+    });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual("Password reset successful");
+  });
+});

@@ -12,11 +12,12 @@ const createError = require("http-errors");
 const app = express(); // Creates an Express application
 const books = require('../database/books');
 const users = require('../database/users');
-
-
+const Ajv = require("ajv");
+const ajv = new Ajv();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -322,6 +323,24 @@ app.post("/api/users", async (req, res, next) => {
   }
 });
 
+app.post("/api/users/:email/reset-password", async (req,res,next) => {
+  try {
+    const {email} = req.params;
+    const {newPassword, securityQuestions} = req.body;
+
+    const user = await users.findOne({email: email});
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+
+    const result = await users.updateOne({email: email}, {user});
+
+    console.log("Result:", result);
+    res.status(200).send({message: "Password reset successful", user: users});
+  } catch (err) {
+    console.error("Error:", err.message);
+    next(err);
+  }
+});
 
 // 404 error handling middleware
 app.use(function(req, res, next) {
